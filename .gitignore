@@ -1,0 +1,15 @@
+# Build output
+build/
+
+# Object files
+*.o
+
+# Firmware binaries
+*.elf
+*.bin
+*.hex
+*.map
+*.exe
+
+# VS Code local files
+.vscode/*.log
