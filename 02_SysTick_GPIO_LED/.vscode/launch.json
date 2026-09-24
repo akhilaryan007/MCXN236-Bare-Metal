@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug FRDM-MCXN236 (LinkServer)",
+      "type": "cortex-debug",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "executable": "${workspaceFolder}/build/firmware.elf",
+      "servertype": "external",
+      "gdbTarget": "localhost:3333",
+      "gdbPath": "C:/nxp/MCUXpressoIDE_25.6.136/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/bin/arm-none-eabi-gdb.exe",
+      "device": "MCXN236",
+      "svdFile": "${workspaceFolder}/MCXN236.svd",
+      "runToEntryPoint": "main",
+      "preLaunchTask": "build",
+      "preLaunchCommands": [
+      "set mem inaccessible-by-default off"
+      ]
+    }
+  ]
+}

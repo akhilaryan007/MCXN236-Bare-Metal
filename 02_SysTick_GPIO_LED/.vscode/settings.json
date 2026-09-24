@@ -1,0 +1,36 @@
+{
+    "cortex-debug.armToolchainPath": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin",
+    "cortex-debug.linkserverPath": "C:\\nxp\\LinkServer_26.6.137\\LinkServer.exe",
+    "cortex-debug.gdbPath": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin\\arm-none-eabi-gdb.exe",
+    "cortex-debug.liveWatchRefreshRate": 1000,
+    "editor.hover.enabled": "on",
+    "editor.hover.delay": 200,
+    "editor.parameterHints.enabled": true,
+
+    "C_Cpp.intelliSenseEngine": "default",
+
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/startup"
+    ]
+}
+
+
+/* {
+    "cortex-debug.armToolchainPath": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin",
+    "cortex-debug.linkserverPath": "C:\\nxp\\LinkServer_26.6.137\\LinkServer.exe",
+    "cortex-debug.gdbPath": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin\\arm-none-eabi-gdb.exe",
+
+    "editor.hover.enabled": "on",
+    "editor.hover.delay": 200,
+    "editor.parameterHints.enabled": true,
+
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/src"
+    ]
+}*/
