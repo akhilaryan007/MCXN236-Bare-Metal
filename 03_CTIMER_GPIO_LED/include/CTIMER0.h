@@ -1,7 +1,6 @@
 #ifndef CTIMER0_H
 #define CTIMER0_H
 
-#include"MCXN236.h"
 #include<stdint.h>
 static inline void CTIMER0_INIT_CLOCK(void)
 {

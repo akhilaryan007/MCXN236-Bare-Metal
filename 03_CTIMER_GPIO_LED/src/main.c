@@ -1,5 +1,6 @@
 #include "MCXN236.h"
 #include "systick.h"
+#include "CTIMER0.h"
 #include <stdint.h>
 
 
