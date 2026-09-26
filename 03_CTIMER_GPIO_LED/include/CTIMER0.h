@@ -1,7 +1,11 @@
 #ifndef CTIMER0_H
 #define CTIMER0_H
 
+#include"MCXN236.h"
 #include<stdint.h>
+
+/*---------------------------CTIMER INITIALIZATION------------------------------------------*/
+
 static inline void CTIMER0_INIT_CLOCK(void)
 {
         /*Select FRO_HF as CTIMER0 functional clock*/

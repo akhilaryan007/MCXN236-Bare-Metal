@@ -5,7 +5,7 @@ generating an interrupt.
 
  Initialization  1156 PAGE 
 1. Select a clock source for the CTIMER using the CTIMERCLKSEL register.
-2. Enable the clock to the CTIMER via CTIMERCLKSELn[SEL]. This enables the register interface and the peripheral
+2. Enable the clock to the CTIMER via AHBCLKCTRL1. This enables the register interface and the peripheral
 function clock.
 3. Clear the CTIMER peripheral reset using the Peripheral Reset Control 0 (PRESETCTRL0) and Peripheral Reset Control
 1 (PRESETCTRL1) registers.
@@ -29,5 +29,51 @@ CTIMERCLKSEL0 = (CTIMERCLKSEL0 & ~0xFU) | 0x3U;
 //    CTCR, PR, MR0, MCR, etc.
 
 // 4. Start CTIMER0
+
+48,000,000 Hz
+       ↓ / 1,000,000
+48 timer ticks per microsecond?  ❌
+
+Actually, because you're using the prescaler to make the timer counter tick every 1 µs, the correct match value is simply:
+
+500 timer counts = 500 µs = 0.5 ms
+
+48 MHz
+  ↓
+PR = 47
+  ↓
+1 MHz timer counter
+  ↓
+1 µs/count
+  ↓
+MR0 = 500
+  ↓
+500 µs
+  ↓
+0.5 ms
+
+
+
+/*  ------------------------------OVERALL APPROACH------------------------------  */
+
+FRO_HF
+  ↓
+CTIMERCLKSEL0
+  ↓
+Enable CTIMER0 clock
+  ↓
+Reset CTIMER0
+  ↓
+Release reset
+  ↓
+Configure prescaler
+  ↓
+Configure MR0
+  ↓
+Configure MCR
+  ↓
+Configure interrupt if required
+  ↓
+Start CTIMER0
 
 
