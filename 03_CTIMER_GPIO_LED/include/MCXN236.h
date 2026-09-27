@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 void Reset_Handler(void);
+// void NMI_Handler (void);
 
 extern int main(void);
  
@@ -22,11 +23,23 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
+/*INTERRUPT REQ NUMBER */
+
+#define CTIMER0_IRQn    31U
+
 /*Enable Clock*/
 
 #define Reg(addr)  (*(volatile uint32_t *)(addr))    /* #define SQUARE(x)  ((x) * (x))   int result = SQUARE(5)  result=((5)  (5))*/
 
-/*SYSTEM CLOCK GENERATOR*/
+/*ARM REGISTERS*/
+
+#define  NVIC      Reg(0xE000E100UL)    // NVIC BASE ADDRESS
+
+#define ISER     Reg(0xE000E100UL)   // Interrupt Set Enable Register
+
+#define IPR        Reg( 0xE000E41CUL)  //  Interrupt Priority Register 400 base but 7x4=28-> 400 + 28 = 1CIPR[7]
+
+/*--------------------------------------SYSTEM CLOCK GENERATOR-----------------------------------------------------*/
 
 #define SCG_BASE_ADDRESS    0x40044000UL
 
@@ -38,7 +51,7 @@ void SysTick_Handler(void);
 
 #define FIRCCFG             Reg(SCG_BASE_ADDRESS+0x3058UL)  
 
-/*SYSCON*/
+/*---------------------------------------------SYSCON-----------------------------------------------------*/
 
 #define SYSCON                0x40000000UL
 
@@ -46,7 +59,8 @@ void SysTick_Handler(void);
 
 #define AHBCLKCTRLSET0        Reg(SYSCON+0X220UL)
 
-#define AHBCLKCTRLCLR0        Reg(SYSCON+240UL)
+#define AHBCLKCTRLCLR0        Reg(SYSCON+0x240UL)
+
 
 static inline void Clock_Enable (void)
 {
@@ -61,7 +75,7 @@ static inline void Clock_Disable(void)
 }
 // GPIO4 [23]   PORT4 [17]
 
-/*Peripheral Reset*/
+/*------------------------------------------------------------Peripheral Reset---------------------------------*/
 
 #define PRESETCTRL0         Reg(SYSCON+0x100UL)
 
@@ -79,9 +93,9 @@ static inline void Peripheral_Reset(void)
 
 }
 
+// void Peripheral_Reset(void);
 
-
-/*PORT PIN MUX*/
+/*-----------------------------------------------------PORT PIN MUX--------------------------------------*/
 
 #define PORT4_Base      0x4011A000UL 
 
@@ -92,10 +106,13 @@ static inline void PIN_MUX(void)
     PCR19 &= ~(0xFU << 8);       /*[11:8] needs to clear the MUX bits 15U << 8  PCR19&=~(((1<<4)-1)<<8);*/ 
 }
 
-/*GPIO*/
+/*-------------------------------------------------GPIO-------------------------------------------------------*/
 
 #define GPIO4      0x4009E000UL
 
+// #define PDIR        Reg(GPIO0+50UL)
+
+// #define PDDR        Reg(GPIO0+54UL)
 
 typedef struct{
 
@@ -133,4 +150,69 @@ typedef struct{
 
 #define PRESETCTRLCLR1          Reg(SYSCON+0x144UL)
 
+#define CTIMER0                 Reg(0x4000C000UL)
+
+typedef struct {
+    volatile uint32_t INTERRUPT;
+
+    volatile uint32_t TCR;
+
+    volatile uint32_t TIMERCOUNTER;
+
+    volatile uint32_t PRESCALEREG;
+
+    volatile uint32_t PRESCALECOUNTER;
+
+    volatile uint32_t MCR;
+
+    volatile uint32_t MR0;
+
+    volatile uint32_t MR1;
+
+    volatile uint32_t MR2;
+
+    volatile uint32_t MR3;
+
+    volatile uint32_t CCR;
+
+    volatile uint32_t CR0;
+
+    volatile uint32_t CR1;
+
+    volatile uint32_t CR2;
+
+    volatile uint32_t CR3;
+
+    volatile uint32_t EXTERNALMATCH;
+
+}CTIMER_TYPE;
+
+#define CTIMER0_PTR ((CTIMER_TYPE *)CTIMER0)
+
+static inline void CTIMER_CLK_SEL (void)
+{
+    /*Select FRO_HF as CTIMER0 functional clock*/
+
+    CTIMERCLKSEL0 &= ~(0xFU << 0);       // CLEAR [3:0]  0000b
+    CTIMERCLKSEL0 |= (0x3U << 0);       // SET [3:0]  0011b
+}
+
+static inline void CTIMER_CLK_ENABLE (void)
+{
+    AHBCLKCTRLSET1 =(1<<26);                /*It is a write only register so don't use '|*/
+}
+
+/*PERIPHERAL RESET*/
+
+static inline void CTIMER_PERIPHERAL_RESET (void)
+{
+    PRESETCTRLSET1 = (1<<26);            /*set the peripheral ASSERT*/
+    PRESETCTRLCLR1 = (1<<26);            /*Reset the peripheral*/
+}
+
+
+
+
 #endif
+
+

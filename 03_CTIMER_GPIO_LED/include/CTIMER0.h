@@ -24,4 +24,10 @@ static inline void CTIMER0_INIT_CLOCK(void)
 
 }
 
+void CTIMER_INIT();
+
+void NVIC_CTimer0_Enable(void);
+
+void  CTIMER0_IRQHandler(void);
+
 #endif
