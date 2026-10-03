@@ -30,22 +30,6 @@ void CTIMER_INIT(void)
 
 
 }
- 
-
-void CTIMER0_IRQHandler(void)
-{
-
-    CTIMER0_PTR->INTERRUPT = (1<<0);  // Clear the interrupt flag for MR0 by writing a 1 to the corresponding bit in the Interrupt Register (IR). This is necessary to acknowledge the interrupt and allow future interrupts to be generated.
-
-    CTIMER0_TICK_COUNT++;  // Increment the tick count each time the interrupt is triggered
-
-    if (CTIMER0_TICK_COUNT >= 2U)
-    {
-        CTIMER0_TICK_COUNT = 0;
-
-        /* Toggle LED */
-    }
-} 
 
 
 void NVIC_CTimer0_Enable(void)

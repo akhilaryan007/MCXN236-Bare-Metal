@@ -1,3 +1,150 @@
+# CTIMER0 Hardware Timer Interrupt — Debug Story
+
+## Objective
+
+The objective was to configure the MCXN236 CTIMER0 peripheral as a bare-metal hardware timer and generate periodic interrupts to toggle an RGB LED.
+
+The implementation was intentionally developed without the MCUXpresso SDK to understand the peripheral clock, reset, timer registers, NVIC configuration, and interrupt flow at register level.
+
+## Initial Configuration
+
+The timer was configured using the MCXN236 reference manual:
+
+* CTIMER0 base address: `0x4000C000`
+* CTIMER0 interrupt: `CTIMER0_IRQn = 31`
+* Timer clock source: FRO_HF
+* Timer clock: 48 MHz
+* Target timer tick: 1 µs
+* Prescaler: `47`
+
+The intended flow was:
+
+```text
+FRO_HF / peripheral clock
+        ↓
+    CTIMER0
+        ↓
+ Timer reaches match
+        ↓
+ Interrupt request
+        ↓
+      NVIC
+        ↓
+ CTIMER0_IRQHandler()
+        ↓
+    Toggle LED
+```
+
+## Debugging
+
+The first problem occurred when accessing CTIMER0 registers after enabling its peripheral clock.
+
+The following register access was used to verify peripheral accessibility:
+
+```c
+volatile uint32_t test =
+    *(volatile uint32_t *)0x4000C000;
+```
+
+The debugger was initially able to read the CTIMER0 address and returned:
+
+```text
+0x4000C000 → 1073790976
+```
+
+However, after stepping further into the initialization code, the debugger lost communication with the target and the processor entered a fault/default-handler condition.
+
+The investigation then focused on the two main conditions required for peripheral access:
+
+### 1. Peripheral clock
+
+The CTIMER0 clock gate was investigated through the SYSCON AHB clock-control registers.
+
+The CTIMER0 clock-enable bit was verified using:
+
+```text
+AHBCLKCTRLSET1
+```
+
+The corresponding register state changed after enabling the CTIMER0 clock.
+
+### 2. Peripheral reset
+
+The CTIMER0 reset control was investigated through:
+
+```text
+PRESETCTRL1
+SET1
+CLR1
+```
+
+The CTIMER0 reset bit was observed and verified during the initialization sequence.
+
+### 3. Register access
+
+After clock and reset configuration appeared correct, accesses to CTIMER0 registers such as:
+
+```c
+CTIMER0->TCR
+CTIMER0->PRESCALEREG
+```
+
+still resulted in debugger instability / processor fault behaviour.
+
+This indicated that the problem was not simply an incorrect timer-period calculation. The failure occurred at the peripheral-access level before a reliable CTIMER0 interrupt could be demonstrated.
+
+## Result
+
+CTIMER0 was therefore treated as a debugging exercise rather than marked as a completed timer-interrupt project.
+
+The investigation provided practical experience with:
+
+* Memory-mapped peripheral access
+* SYSCON clock gating
+* Peripheral reset control
+* Timer clock selection
+* Register-level debugging
+* NVIC interrupt configuration
+* Cortex-M fault behaviour
+* Debugger peripheral-access failures
+
+The next implementation moved to the MCXN236 MRT peripheral to demonstrate the same hardware-timer → NVIC → ISR → GPIO-toggle concept using a different timer peripheral.
+
+## Key Lesson
+
+A timer interrupt problem should not be debugged only from the timer configuration itself.
+
+The complete dependency chain must be verified:
+
+```text
+Clock source
+    ↓
+Peripheral clock gate
+    ↓
+Peripheral reset release
+    ↓
+Peripheral register accessibility
+    ↓
+Timer configuration
+    ↓
+Interrupt flag
+    ↓
+NVIC enable
+    ↓
+ISR execution
+    ↓
+GPIO action
+```
+
+This debugging exercise helped establish a systematic approach for investigating low-level MCU peripherals before moving to the next hardware timer.
+
+
+
+
+
+
+## ABOUT CTIMER
+
 Each CTIMER is designed to count cycles of the CTIMER function clock or an externally supplied clock. A CTIMER can optionally
 generate an interrupt or perform other actions at specified timer values based on the settings of Match (MR0 - MR3). Each
 CTIMER also includes capture input pins (see Capture mode) to capture the timer value when an input signal transitions, optionally

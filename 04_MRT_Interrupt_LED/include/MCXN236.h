@@ -4,9 +4,11 @@
 #define MCXN236_H
 
 #include <stdint.h>
+#include <stddef.h>
+
 
 void Reset_Handler(void);
-// void NMI_Handler (void);
+
 
 extern int main(void);
  
@@ -68,12 +70,13 @@ static inline void Clock_Enable (void)
     AHBCLKCTRLSET0=(1<<17);          /* AHBCLKCTRL Register is a write only register no need to use '|' PORT 4 */
 }
 
+
 static inline void Clock_Disable(void)
 {
         AHBCLKCTRLCLR0 = (1U << 23);
         AHBCLKCTRLCLR0 = (1U << 17);
 }
-// GPIO4 [23]   PORT4 [17]
+
 
 /*------------------------------------------------------------Peripheral Reset---------------------------------*/
 
@@ -93,7 +96,7 @@ static inline void Peripheral_Reset(void)
 
 }
 
-// void Peripheral_Reset(void);
+
 
 /*-----------------------------------------------------PORT PIN MUX--------------------------------------*/
 
@@ -110,9 +113,6 @@ static inline void PIN_MUX(void)
 
 #define GPIO4      0x4009E000UL
 
-// #define PDIR        Reg(GPIO0+50UL)
-
-// #define PDDR        Reg(GPIO0+54UL)
 
 typedef struct{
 
@@ -138,32 +138,24 @@ typedef struct{
  
 /*CLOCK ENABLE*/
 
-#define CTIMERCLKSEL0          Reg(SYSCON+0x26CUL)
+#define CTIMERCLKSEL0          Reg(SYSCON+0x270UL)
 
-#define AHBCLKCTRL1           Reg(SYSCON + 0x204UL)
+#define AHBCLKCTRLSET1         Reg(SYSCON+0x224UL)   
 
-#define AHBCLKCTRLSET1         Reg(SYSCON+0x224UL)
-
-#define PRESETCTRL1             Reg(SYSCON+0x104UL)
-
-#define PRESETCTRLSET1           Reg(SYSCON+0x124UL)
-
-#define PRESETCTRLCLR1          Reg(SYSCON+0x144UL)
-
-#define CTIMER0                 Reg(0x4000C000UL)
+#define CTIMER0                 0x4000D000UL
 
 typedef struct {
-    volatile uint32_t INTERRUPT;
+    volatile uint32_t INTERRUPT;  // 0
 
-    volatile uint32_t TCR;
+    volatile uint32_t TCR;      //4
 
-    volatile uint32_t TIMERCOUNTER;
+    volatile uint32_t TIMERCOUNTER;        // 8
 
-    volatile uint32_t PRESCALEREG;
+    volatile uint32_t PRESCALEREG;          //C
 
-    volatile uint32_t PRESCALECOUNTER;
+    volatile uint32_t PRESCALECOUNTER;      //10
 
-    volatile uint32_t MCR;
+    volatile uint32_t MCR;                  // 14 
 
     volatile uint32_t MR0;
 
@@ -188,31 +180,4 @@ typedef struct {
 }CTIMER_TYPE;
 
 #define CTIMER0_PTR ((CTIMER_TYPE *)CTIMER0)
-
-static inline void CTIMER_CLK_SEL (void)
-{
-    /*Select FRO_HF as CTIMER0 functional clock*/
-
-    CTIMERCLKSEL0 &= ~(0xFU << 0);       // CLEAR [3:0]  0000b
-    CTIMERCLKSEL0 |= (0x3U << 0);       // SET [3:0]  0011b
-}
-
-static inline void CTIMER_CLK_ENABLE (void)
-{
-    AHBCLKCTRLSET1 =(1<<26);                /*It is a write only register so don't use '|*/
-}
-
-/*PERIPHERAL RESET*/
-
-static inline void CTIMER_PERIPHERAL_RESET (void)
-{
-    PRESETCTRLSET1 = (1<<26);            /*set the peripheral ASSERT*/
-    PRESETCTRLCLR1 = (1<<26);            /*Reset the peripheral*/
-}
-
-
-
-
 #endif
-
-
