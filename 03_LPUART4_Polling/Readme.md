@@ -63,3 +63,4 @@ Verified:
 - Circular buffer implementation
 - Interrupt-driven UART communication
 - UART communication using DMA
+
