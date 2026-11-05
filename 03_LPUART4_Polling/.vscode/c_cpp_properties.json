@@ -1,0 +1,17 @@
+ {
+    "version": 4,
+    "configurations": [
+        {
+            "name": "MCXN236",
+            "includePath": [
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/startup"
+            ],
+            "defines": ["CPU_MCXN236VDF"],
+            "compilerPath": "C:/nxp/MCUXpressoIDE_25.6.136/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/tools/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "C:/nxp/MCUXpressoIDE_25.6.136/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/buildtools/bin/make.exe",
+      "options": {
+        "env": {
+          "PATH": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin;C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\buildtools\\bin;${env:PATH}"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "detail": "Compile and link the MCXN236 firmware image"
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "C:/nxp/MCUXpressoIDE_25.6.136/ide/plugins/com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204/buildtools/bin/make.exe clean",
+      "options": {
+        "env": {
+          "PATH": "C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\tools\\bin;C:\\nxp\\MCUXpressoIDE_25.6.136\\ide\\plugins\\com.nxp.mcuxpresso.tools.win32_25.6.0.202501151204\\buildtools\\bin;${env:PATH}"
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
